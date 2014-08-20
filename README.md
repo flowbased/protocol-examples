@@ -1,9 +1,9 @@
 FBP protocol examples
 ========================
 
-Examples in various languages on how to implement:
+[FBP protocol](http://noflojs.org/documentation/protocol/) examples in various languages on how to implement:
 
-* FBP or data-flow runtimes
+* Exposing FBP or data-flow runtimes. [Python](./python)
 * (_TODO_) User interfaces / programming tools for FBP runtimes
 * (_TODO_) A FBP subgraph representation of a non-FBP system
 
