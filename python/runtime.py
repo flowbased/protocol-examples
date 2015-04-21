@@ -122,6 +122,14 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 ],
             }
             self.send('runtime', 'runtime', payload)
+
+        # network:packet, allows sending data in/out to networks in this runtime
+        # can be used to represent the runtime as a FBP component in bigger system "remote subgraph"
+        elif command == 'packet':
+            # We don't actually run anything, just echo input back and pretend it came from "out"
+            payload['port'] = 'out'
+            self.send('runtime', 'packet', payload)
+
         else:
             print "WARN: Unknown command '%s' for protocol '%s' " % (command, 'runtime')
 
