@@ -28,6 +28,12 @@ class DummyRuntime(object):
         # Normally only one toplevel / "main" can be ran,
         # and the other "subgraphs" can be used as components
         self.graphs = {}
+        self.started = False
+
+    def start(self, graph_id):
+        self.started = True
+    def stop(self, graph_id):
+        self.started = False
 
     def new_graph(self, graph_id):
         self.graphs[graph_id] = {
@@ -112,6 +118,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 'version': '0.4', # protocol version
                 'capabilities': [
                     'protocol:component',
+                    'protocol:network'
                 ],
             }
             self.send('runtime', 'runtime', payload)
@@ -178,8 +185,29 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
 
 
     def handle_network(self, command, payload):
-        pass
-        # TODO
+        def send_status(cmd, g):
+            started = self.runtime.started
+            # NOTE: running indicates network is actively running, data being processed
+            # for this example, we consider ourselves running as long as we have been started
+            running = started
+            payload = {
+                graph: g,
+                started: started,
+                running: running,
+            }
+            self.send('network', cmd, payload)
+
+        graph = payload.get('graph', None)
+        if command == 'getstatus':
+            send_status('status', graph)
+        elif command == 'start':
+            self.runtime.start(graph)
+            send_status('started', graph)
+        elif command == 'stop':
+            self.runtime.stop(graph)
+            send_status('started', graph)
+        else:
+            print "WARN: Unknown command '%s' for protocol '%s'" % (command, 'network')
 
 if __name__ == '__main__':
     port = 3569
