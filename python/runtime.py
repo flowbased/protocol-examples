@@ -71,6 +71,12 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         super(RuntimeApplication, self).__init__(self)
         self.runtime = DummyRuntime()
 
+    ### WebSocket transport handling ###
+    @staticmethod
+    def protocol_name():
+        # WebSocket sub-protocol
+        return 'noflo'
+
     def on_open(self):
         print "INFO: Connection opened"
 
