@@ -1,5 +1,6 @@
 import json
 import random
+import os
 
 """ """
 import gevent
@@ -217,8 +218,15 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         else:
             print "WARN: Unknown command '%s' for protocol '%s'" % (command, 'network')
 
+
 if __name__ == '__main__':
-    port = 3569
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option("-p", "--port", default=3569, type='int',
+                      help="Port to listen on", metavar="PORT")
+    (options, args) = parser.parse_args()
+
+    port = int(os.environ.get('PORT', options.port))
     r = geventwebsocket.Resource({'/': RuntimeApplication})
     s = geventwebsocket.WebSocketServer(('', port), r)
     print 'INFO: Runtime listening on port %d' % (port,)
