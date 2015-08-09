@@ -213,7 +213,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
             send_status('started', graph)
         elif command == 'stop':
             self.runtime.stop(graph)
-            send_status('started', graph)
+            send_status('stopped', graph)
         else:
             print "WARN: Unknown command '%s' for protocol '%s'" % (command, 'network')
 
