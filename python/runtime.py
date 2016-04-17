@@ -148,6 +148,8 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 payload['name'] = component_name
                 self.send('component', 'component', payload)
 
+            self.send('component', 'componentsready', len(self.runtime.components))
+
         else:
             print "WARN: Unknown command '%s' for protocol '%s' " % (command, 'component')
 
