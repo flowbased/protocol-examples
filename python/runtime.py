@@ -132,6 +132,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         # can be used to represent the runtime as a FBP component in bigger system "remote subgraph"
         elif command == 'packet':
             # We don't actually run anything, just echo input back and pretend it came from "out"
+            self.send('runtime', 'packetsent', payload)
             payload['port'] = 'out'
             self.send('runtime', 'packet', payload)
 
