@@ -106,6 +106,8 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
 
     def send(self, protocol, command, payload):
         """Send a message to UI/client""" 
+        if isinstance(payload, dict) and 'secret' in payload:
+            del payload['secret']
         m = json.dumps({'protocol': protocol, 'command': command, 'payload': payload})
         self.ws.send(m)
 
@@ -116,10 +118,12 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         if command == 'getruntime':
             payload = {
                 'type': 'fbp-python-example',
-                'version': '0.4', # protocol version
+                'version': '0.7', # protocol version
                 'capabilities': [
+                    'protocol:graph'
                     'protocol:component',
                     'protocol:network'
+                    'protocol:runtime'
                 ],
             }
             self.send('runtime', 'runtime', payload)
@@ -128,6 +132,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         # can be used to represent the runtime as a FBP component in bigger system "remote subgraph"
         elif command == 'packet':
             # We don't actually run anything, just echo input back and pretend it came from "out"
+            self.send('runtime', 'packetsent', payload)
             payload['port'] = 'out'
             self.send('runtime', 'packet', payload)
 
@@ -146,6 +151,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 # We cheated and chose naming conventions that matched
                 payload = component_data
                 payload['name'] = component_name
+                payload['subgraph'] = False
                 self.send('component', 'component', payload)
 
             self.send('component', 'componentsready', len(self.runtime.components))
@@ -200,13 +206,13 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
             started = self.runtime.started
             # NOTE: running indicates network is actively running, data being processed
             # for this example, we consider ourselves running as long as we have been started
-            running = started
-            payload = {
-                graph: g,
-                started: started,
-                running: running,
+            running = self.runtime.started
+            response = {
+                'graph': g,
+                'started': started,
+                'running': running,
             }
-            self.send('network', cmd, payload)
+            self.send('network', cmd, response)
 
         graph = payload.get('graph', None)
         if command == 'getstatus':
