@@ -206,13 +206,13 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
             started = self.runtime.started
             # NOTE: running indicates network is actively running, data being processed
             # for this example, we consider ourselves running as long as we have been started
-            running = started
-            payload = {
-                graph: g,
-                started: started,
-                running: running,
+            running = self.runtime.started
+            response = {
+                'graph': g,
+                'started': started,
+                'running': running,
             }
-            self.send('network', cmd, payload)
+            self.send('network', cmd, response)
 
         graph = payload.get('graph', None)
         if command == 'getstatus':
