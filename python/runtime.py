@@ -118,10 +118,12 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
         if command == 'getruntime':
             payload = {
                 'type': 'fbp-python-example',
-                'version': '0.4', # protocol version
+                'version': '0.7', # protocol version
                 'capabilities': [
+                    'protocol:graph'
                     'protocol:component',
                     'protocol:network'
+                    'protocol:runtime'
                 ],
             }
             self.send('runtime', 'runtime', payload)
