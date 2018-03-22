@@ -106,6 +106,8 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
 
     def send(self, protocol, command, payload):
         """Send a message to UI/client""" 
+        if 'secret' in payload:
+            del payload['secret']
         m = json.dumps({'protocol': protocol, 'command': command, 'payload': payload})
         self.ws.send(m)
 
