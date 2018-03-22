@@ -150,6 +150,7 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 # We cheated and chose naming conventions that matched
                 payload = component_data
                 payload['name'] = component_name
+                payload['subgraph'] = False
                 self.send('component', 'component', payload)
 
             self.send('component', 'componentsready', len(self.runtime.components))
