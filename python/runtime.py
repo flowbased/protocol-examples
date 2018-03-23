@@ -120,9 +120,9 @@ class RuntimeApplication(geventwebsocket.WebSocketApplication):
                 'type': 'fbp-python-example',
                 'version': '0.7', # protocol version
                 'capabilities': [
-                    'protocol:graph'
+                    'protocol:graph',
                     'protocol:component',
-                    'protocol:network'
+                    'protocol:network',
                     'protocol:runtime'
                 ],
             }
